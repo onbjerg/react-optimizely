@@ -1,6 +1,6 @@
 {
   "name": "react-optimizely",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "React helpers for the Optimizely JS API",
   "main": "dist/index.js",
   "repository": "https://github.com/onbjerg/react-optimizely.git",
