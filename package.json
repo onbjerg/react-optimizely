@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "React helpers for the Optimizely JS API",
   "main": "dist/index.js",
-  "repository": "https://github.com/slideshop/react-optimizely.git",
-  "author": "Slideshop Inc.",
+  "repository": "https://github.com/onbjerg/react-optimizely.git",
+  "author": "Oliver Nordbjerg <hi@notbjerg.me>",
   "license": "MIT",
   "devDependencies": {
     "ava": "^0.18.1",
