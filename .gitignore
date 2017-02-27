@@ -1,0 +1,9 @@
+# Deps
+node_modules
+
+# Coverage
+.nyc_output
+coverage
+
+# Build
+dist

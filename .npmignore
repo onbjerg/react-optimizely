@@ -1,0 +1,13 @@
+# Coverage
+.nyc_output
+coverage
+
+# Tests
+test
+
+# Source
+src
+
+# Files
+.babelrc
+.gitignore
