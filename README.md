@@ -4,7 +4,7 @@ React helpers for A/B testing with [Optimizely](https://optimizely.com).
 
 **Quick Start Example**
 
-```json
+```js
 import React from 'react'
 import optimizely, { variate } from 'react-optimizely'
 
