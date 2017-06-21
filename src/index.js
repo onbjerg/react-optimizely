@@ -52,6 +52,17 @@ const getAllExperiments = () =>
 const getActiveExperiments = () =>
   (isOptimizelyLoaded() ? optimizely('activeExperiments') || [] : [])
 
+
+/**
+ * Get all registered Optimizely variations.
+ *
+ * @return {Object.<string, Object>}
+ *         A hash-map-like object in the form `<id, experiment>`
+ */
+const getAllVariations = () =>
+  (isOptimizelyLoaded() ? optimizely('allVariations') || {} : {})
+
+
 /**
  * Get the variation map.
  *
@@ -63,6 +74,30 @@ const getActiveExperiments = () =>
  */
 const getVariationMap = () =>
   (isOptimizelyLoaded() ? optimizely('variationMap') || {} : {})
+
+/**
+ * Get the variation map.
+ *
+ * @return {Object}
+ *         This is a hash table whose keys are the experiment ids of
+ *         experiments running for the visitor (including inactive
+ *         experiments for which the user has been bucketed), and whose
+ *         values are the variation names for those experiments.
+ */
+const getVariationNamesMap = () =>
+  (isOptimizelyLoaded() ? optimizely('variationNamesMap') || {} : {})
+
+/**
+ * Get the variation Ids map.
+ *
+ * @return {Object}
+ *         This is a hash table whose keys are the experiment ids of
+ *         experiments running for the visitor (including inactive
+ *         experiments for which the user has been bucketed), and whose
+ *         values are the variation names for those experiments.
+ */
+const getVariationIdsMap = () =>
+  (isOptimizelyLoaded() ? optimizely('variationIdsMap') || {} : {})
 
 /**
  * Trigger an API call through the Optimizely client.
@@ -219,12 +254,12 @@ export const activate = (experimentName) => {
  *         could not be resolved to a singular experiment ID.
  */
 export const getVariant = (experimentName) => {
-  const variationMap = getVariationMap()
+  const variationIdsMap = getVariationIdsMap()
   if (isOptimizelyLoaded() &&
     isNameUnique(experimentName) &&
     isEnabled(experimentName) &&
     isActive(experimentName)) {
-    return variationMap[getExperimentId(experimentName)]
+    return variationIdsMap[getExperimentId(experimentName)]
   }
 
   return null
@@ -281,7 +316,7 @@ export const track = (event, revenue = null) => {
  */
 export const variate = (variantToResultMap, variant) => {
   let result = variantToResultMap['default']
-  if (variant !== undefined &&
+  if (variant != undefined &&
     variantToResultMap.hasOwnProperty(variant.name)) {
     result = variantToResultMap[variant.name]
   }
@@ -319,14 +354,28 @@ export default (experimentName) =>
    *         The wrapped component
    */
   (Component) =>
-    () => {
-      // Activate the experiment
-      const isActive = activate(experimentName)
+    class withExperiment extends React.Component {
 
-      // Get experiment and variant information
-      const experiment = getExperimentByName(experimentName)
-      const variant = getVariant(experimentName)
+      render() {
+        const {props} = this;
 
-      return <Component
-        optimizely={{ experiment, variant, isActive }} />
+        // Activate the experiment
+        const isActive = activate(experimentName)
+
+        // Get experiment and variant information
+        const experiment = getExperimentByName(experimentName)
+        const variationsForExperiment = getVariant(experimentName)
+
+        if (variationsForExperiment && variationsForExperiment.length) {
+          const variant = getAllVariations()[variationsForExperiment[0]]
+
+          return <Component
+            optimizely={{ experiment, variant, isActive }} {...props}/>
+        } else {
+          return <Component
+            optimizely={{ experiment, variant: null, isActive }} {...props}/>
+        }
+
+      }
+
     }
