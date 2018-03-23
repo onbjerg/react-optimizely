@@ -319,7 +319,7 @@ export default (experimentName) =>
    *         The wrapped component
    */
   (Component) =>
-    () => {
+    (props) => {
       // Activate the experiment
       const isActive = activate(experimentName)
 
@@ -328,5 +328,6 @@ export default (experimentName) =>
       const variant = getVariant(experimentName)
 
       return <Component
+        {...props}
         optimizely={{ experiment, variant, isActive }} />
     }

@@ -124,3 +124,34 @@ test('connect: activated and experiment', (t) => {
   })
   t.is(frame.props.optimizely.isActive, true)
 })
+
+test('connect: props pass-through', (t) => {
+  global.window = mockOptimizelyWindow({
+    allExperiments: {
+      'A': {
+        name: 'Experiment A',
+        enabled: true
+      }
+    },
+    variationMap: {
+      'A': {
+        'name': 'Variant A',
+        'code': 'JSCODE'
+      }
+    },
+    activeExperiments: ['A'],
+    push: ([method, ...args]) => {
+      if (method === 'activate') {
+        window.optimizely.activeExperiments = window.optimizely.activeExperiments || []
+        window.optimizely.activeExperiments.push(args[0])
+      }
+    }
+  })
+
+  const renderer = createRenderer(
+    connect('Experiment A')(TestComponent)
+  )
+  let frame = renderer.render({ other: 'props' })
+
+  t.is(frame.props.other, 'props')
+})
