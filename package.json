@@ -16,7 +16,7 @@
     "react-addons-test-utils": "^15.4.2",
     "react-dom": "^15.4.2",
     "react-test-render": "^1.0.3",
-    "standard": "^8.6.0"
+    "standard": "^13.0.2"
   },
   "peerDependencies": {},
   "scripts": {
